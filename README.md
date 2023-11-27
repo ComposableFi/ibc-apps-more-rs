@@ -7,4 +7,4 @@ Client side of:
 
 With no_std and CosmWasm support with ibc-rs integration.
 
-Does not depend on cosmrs or cosmwasm-std directly because they are std only.
+Does not depend on cosmrs or osmosis-rust directly because they are std only.
