@@ -64,6 +64,17 @@ pub struct Callback {
     pub msg: serde_cw_value::Value,
 }
 
+impl Callback {
+    pub fn new(contract: Signer, msg: serde_cw_value::Value) -> Self {
+        Self { contract, msg }
+    }
+
+    #[cfg(feature = "cosmwasm")]
+    pub fn new(contract: Addr, msg: serde_cw_value::Value) -> Self {
+        Self { contract: contract.to_string().into(), msg }
+    }
+}
+
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq)]
 #[serde(rename_all = "snake_case")]
 #[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
