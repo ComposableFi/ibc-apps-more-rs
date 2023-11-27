@@ -33,7 +33,7 @@ pub fn hash_denom_trace(denom: &PrefixedDenom) -> String {
 /// signatures required by gogoproto.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, Eq, prost::Message, Serialize, Deserialize)]
-#[cfg_attr(feature = "json-schema", derive(JsonSchema))]
+#[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
 pub struct Coin {
     #[prost(string, tag = "1")]
     pub denom: String,
