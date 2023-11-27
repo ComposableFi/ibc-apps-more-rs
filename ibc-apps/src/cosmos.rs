@@ -26,11 +26,11 @@ pub fn hash_denom_trace(denom: &PrefixedDenom) -> String {
     let digest = Sha256::digest(denom.as_bytes());
     ["ibc/", &hex::encode_upper(digest)].concat()
 }
-
 /// Coin defines a token with a denomination and an amount.
 ///
 /// NOTE: The amount field is an Int which implements the custom method
 /// signatures required by gogoproto.
+/// modifications: adds cosmwasm_std::Coin mappin and JsonSchema
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, Eq, prost::Message, Serialize, Deserialize)]
 #[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
