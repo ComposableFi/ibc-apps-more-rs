@@ -70,8 +70,11 @@ impl Callback {
     }
 
     #[cfg(feature = "cosmwasm")]
-    pub fn new(contract: Addr, msg: serde_cw_value::Value) -> Self {
-        Self { contract: contract.to_string().into(), msg }
+    pub fn new_cosmwasm(contract: cosmwasm_std::Addr, msg: serde_cw_value::Value) -> Self {
+        Self {
+            contract: contract.to_string().into(),
+            msg,
+        }
     }
 }
 
