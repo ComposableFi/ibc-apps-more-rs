@@ -88,3 +88,12 @@ pub struct SendMemo {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub ibc_callback: Option<Signer>,
 }
+
+/// Message type for `sudo` entry_point
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
+#[serde(rename_all = "snake_case")]
+#[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
+pub enum SudoMsg {
+    #[serde(rename = "ibc_lifecycle_complete")]
+    IBCLifecycleComplete(IBCLifecycleComplete),
+}
