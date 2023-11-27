@@ -1,5 +1,5 @@
 [package]
-name = "ibc-apps"
+name = "ibc-apps-more"
 version = "0.1.0"
 edition = "2021"
 
@@ -19,7 +19,6 @@ prost = { version = "^0.12.0", default-features = false }
 json-schema = ["schemars/derive", "ibc/schema", "serde-cw-value/schema", "std"]
 cosmwasm = ["cosmwasm-std"]
 std = [
-    "ibc/std",
     "serde-json-wasm/std",
     "sha2/std",
     "bech32/std",
