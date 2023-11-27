@@ -1,5 +1,5 @@
 //! most common memo with PFM
- 
+
 use ibc::core::host::types::identifiers::{ChannelId, PortId};
 
 use crate::hook::Callback;
@@ -27,7 +27,6 @@ impl Memo {
     }
 }
 
-
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq)]
 #[serde(rename_all = "snake_case")]
 #[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
@@ -42,7 +41,6 @@ pub struct ForwardingMemo {
     pub timeout: Option<u64>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub retries: Option<u8>,
-
     #[serde(skip_serializing_if = "Option::is_none")]
     pub next: Option<Box<Memo>>,
 }
