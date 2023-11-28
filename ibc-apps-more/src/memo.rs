@@ -1,6 +1,6 @@
 //! most common memo with PFM
 
-use ibc::core::host::types::identifiers::{ChannelId, PortId};
+use ibc_core::host::types::identifiers::{ChannelId, PortId};
 
 use crate::hook::Callback;
 use serde::{Deserialize, Serialize};

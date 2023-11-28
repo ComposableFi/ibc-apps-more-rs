@@ -1,6 +1,7 @@
 //! osmosis hooks app
 
-use ibc::{core::host::types::identifiers::ChannelId, primitives::Signer};
+use ibc_core::host::types::identifiers::ChannelId;
+use ibc_primitives::Signer;
 use serde::{Deserialize, Serialize};
 
 use crate::{cosmos::addess_hash, memo::Memo};
