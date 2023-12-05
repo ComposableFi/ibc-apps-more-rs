@@ -1,6 +1,6 @@
 //! like parts of https://github.com/cosmos/cosmos-rust/tree/main/cosmrs
 //! but with no_std support
-use ibc_apps::transfer::types::PrefixedDenom;
+use ibc_app_transfer_types::PrefixedDenom;
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 

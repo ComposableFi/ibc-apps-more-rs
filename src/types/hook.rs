@@ -1,10 +1,10 @@
 //! osmosis hooks app
 
-use ibc_core::host::types::identifiers::ChannelId;
+use ibc_core_host_types::identifiers::ChannelId;
 use ibc_primitives::Signer;
 use serde::{Deserialize, Serialize};
 
-use crate::{cosmos::addess_hash, memo::Memo};
+use crate::{cosmos::addess_hash, types::memo::Memo};
 
 pub const SENDER_PREFIX: &str = "ibc-wasm-hook-intermediary";
 
