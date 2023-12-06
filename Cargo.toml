@@ -22,6 +22,8 @@ schemars = { version = "^0.8.0", default-features = false, optional = true }
 cosmwasm-std = { version = "^1.5.0", default-features = false, optional = true }
 hex = { version = "^0.4.3", default-features = false }
 prost = { version = "^0.12.0", default-features = false }
+parity-scale-codec = { version = "^3.6", default-features = false, optional = true}
+scale-info = { version = "^2.10", default-features = false, optional = true }
 
 [features]
 json-schema = [
@@ -31,7 +33,16 @@ json-schema = [
     "ibc-primitives/schema",
     "serde-cw-value/schema",
 ]
+parity-scale-codec = [
+    "ibc-core-host-types/parity-scale-codec",
+    "ibc-app-transfer-types/parity-scale-codec",
+    "ibc-primitives/parity-scale-codec",
+    "dep:parity-scale-codec",
+    "dep:scale-info",
+]
+
 cosmwasm = ["cosmwasm-std"]
+unstable = ["serde-cw-value/unstable"]
 std = [
     "serde-json-wasm/std",
     "sha2/std",

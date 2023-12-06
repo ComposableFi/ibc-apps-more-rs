@@ -56,17 +56,24 @@ pub fn derive_intermediate_sender(
 /// Information about which contract to call when the crosschain CW spawn finishes
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
-// Encode, Decode, scale_info::TypeInfo, to be manually implemented for subset of know messages
-pub struct Callback {
+#[cfg_attr(
+    feature = "parity-scale-codec",
+    derive(
+        parity_scale_codec::Encode,
+        parity_scale_codec::Decode,
+        scale_info::TypeInfo
+    )
+)]
+pub struct Callback<Msg> {
     // really Addr, but it does not have scale, I guess we need to impl `type XcAddr = SS58 |
     // Bech32` with signer inside for serde
     pub contract: Signer,
     /// Is a valid JSON object. The contract will be called with this as the message.
-    pub msg: serde_cw_value::Value,
+    pub msg: Msg,
 }
 
-impl Callback {
-    pub fn new(contract: Signer, msg: serde_cw_value::Value) -> Self {
+impl<Msg> Callback<Msg> {
+    pub fn new(contract: Signer, msg: Msg) -> Self {
         Self { contract, msg }
     }
 
@@ -82,13 +89,22 @@ impl Callback {
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq)]
 #[serde(rename_all = "snake_case")]
 #[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
-// Encode, Decode, scale_info::TypeInfo, to be manually implemented for subset of know messages
-pub struct HookMemo<Next> {
+#[cfg_attr(
+    feature = "parity-scale-codec",
+    derive(
+        parity_scale_codec::Encode,
+        parity_scale_codec::Decode,
+        scale_info::TypeInfo
+    )
+)]
+pub struct HookMemo<Next, Msg> {
     #[serde(flatten)]
-    pub base: Memo<Next>,
+    pub base: Memo<Next, Msg>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub ibc_callback: Option<Signer>,
 }
+
+pub type LazyHookMemo = HookMemo<serde_cw_value::Value, serde_cw_value::Value>;
 
 /// Message type for `sudo` entry_point
 #[cfg(feature = "cosmwasm")]

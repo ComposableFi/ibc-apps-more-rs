@@ -8,18 +8,25 @@ use serde::{Deserialize, Serialize};
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq)]
 #[serde(rename_all = "snake_case")]
 #[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
-// Encode, Decode, scale_info::TypeInfo, to be manually implemented for subset of know messages
-pub struct Memo<Next> {
+#[cfg_attr(
+    feature = "parity-scale-codec",
+    derive(
+        parity_scale_codec::Encode,
+        parity_scale_codec::Decode,
+        scale_info::TypeInfo
+    )
+)]
+pub struct Memo<Next, Msg> {
     /// memo has at least one key, with value "wasm", than wasm hooks will try to execute it
     /// CosmWasm must be enabled on receiver chain.
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub wasm: Option<Callback>,
+    pub wasm: Option<Callback<Msg>>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub forward: Option<ForwardingMemo<Next>>,
 }
 
-impl<Next> Memo<Next> {
+impl<Next, Msg> Memo<Next, Msg> {
     pub fn forward(forward: ForwardingMemo<Next>) -> Self {
         Self {
             forward: Some(forward),
@@ -31,7 +38,15 @@ impl<Next> Memo<Next> {
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq)]
 #[serde(rename_all = "snake_case")]
 #[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
-pub struct ForwardingMemoLazy {
+#[cfg_attr(
+    feature = "parity-scale-codec",
+    derive(
+        parity_scale_codec::Encode,
+        parity_scale_codec::Decode,
+        scale_info::TypeInfo
+    )
+)]
+pub struct ForwardingMemoBase {
     pub receiver: String,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub port: Option<PortId>,
@@ -46,16 +61,44 @@ pub struct ForwardingMemoLazy {
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq)]
 #[serde(rename_all = "snake_case")]
 #[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
-// Encode, Decode, scale_info::TypeInfo, to be manually implemented for subset of know messages
+#[cfg_attr(
+    feature = "parity-scale-codec",
+    derive(
+        parity_scale_codec::Encode,
+        parity_scale_codec::Decode,
+        scale_info::TypeInfo
+    )
+)]
 pub struct ForwardingMemo<Next> {
     #[serde(flatten)]
-    pub base: ForwardingMemoLazy,
+    pub base: ForwardingMemoBase,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub next: Option<Box<Next>>,
 }
 
 /// Does not types `next`, so only validates it is JSON
 pub type JsonForwardingMemo = ForwardingMemo<serde_cw_value::Value>;
+
+pub type ExactEagerForwardingMemo = ForwardingMemo<ExactForwardingMemo>;
+
+/// just duplicate as type cannot use Self
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq)]
+#[serde(rename_all = "snake_case")]
+#[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
+#[cfg_attr(
+    feature = "parity-scale-codec",
+    derive(
+        parity_scale_codec::Encode,
+        parity_scale_codec::Decode,
+        scale_info::TypeInfo
+    )
+)]
+pub struct ExactForwardingMemo {
+    #[serde(flatten)]
+    pub base: ForwardingMemoBase,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub next: Option<Box<Self>>,
+}
 
 impl<Next> ForwardingMemo<Next> {
     pub fn new_ibc_memo(
@@ -66,7 +109,7 @@ impl<Next> ForwardingMemo<Next> {
         retries: u8,
     ) -> Self {
         Self {
-            base: ForwardingMemoLazy {
+            base: ForwardingMemoBase {
                 receiver,
                 port: Some(port),
                 channel: Some(channel),
