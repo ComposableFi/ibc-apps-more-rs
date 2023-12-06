@@ -81,7 +81,7 @@ pub type JsonForwardingMemo = ForwardingMemo<serde_cw_value::Value>;
 
 pub type ExactEagerForwardingMemo = ForwardingMemo<ExactForwardingMemo>;
 
-/// just duplicate as type cannot use Self
+/// just duplicate as type cannot use Self in type alias
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq)]
 #[serde(rename_all = "snake_case")]
 #[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
