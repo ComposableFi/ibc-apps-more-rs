@@ -83,14 +83,15 @@ impl Callback {
 #[serde(rename_all = "snake_case")]
 #[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
 // Encode, Decode, scale_info::TypeInfo, to be manually implemented for subset of know messages
-pub struct SendMemo {
+pub struct HookMemo<Next> {
     #[serde(flatten)]
-    pub inner: Memo,
+    pub base: Memo<Next>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub ibc_callback: Option<Signer>,
 }
 
 /// Message type for `sudo` entry_point
+#[cfg(feature = "cosmwasm")]
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 #[serde(rename_all = "snake_case")]
 #[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
