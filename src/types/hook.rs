@@ -1,5 +1,6 @@
 //! osmosis hooks app
 
+use bech32::Hrp;
 use ibc_core_host_types::identifiers::ChannelId;
 use ibc_primitives::Signer;
 use serde::{Deserialize, Serialize};
@@ -44,12 +45,15 @@ pub fn derive_intermediate_sender(
     channel: &ChannelId,
     original_sender: &str,
     bech32_prefix: &str,
-) -> Result<String, bech32::Error> {
-    use bech32::ToBase32;
+) -> Result<String, bech32::EncodeError> {
     let sender_str = alloc::format!("{channel}/{original_sender}");
     let sender_hash_32 = addess_hash(SENDER_PREFIX, sender_str.as_bytes());
     let sender = sender_hash_32.to_base32();
-    bech32::encode(bech32_prefix, sender, bech32::Variant::Bech32)
+    
+    let mut buf = String::new();
+    let hrp = Hrp::parse(bech32_prefix).expect("valid hrp");
+    bech32::encode_lower_to_fmt(&mut buf, hrp, sender)?;
+    Ok(buf)
 }
 
 /// see https://github.com/osmosis-labs/osmosis/tree/main/x/ibc-hooks
