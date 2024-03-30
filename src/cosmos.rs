@@ -66,6 +66,7 @@ impl alloc::fmt::Display for Coin {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::str::FromStr;
 
     #[test]
     fn hash_denom() {

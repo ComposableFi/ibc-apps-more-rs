@@ -1,6 +1,7 @@
 //! osmosis hooks app
 
-use bech32::Hrp;
+use bech32::{Bech32, Hrp};
+use data_encoding::BASE32;
 use ibc_core_host_types::identifiers::ChannelId;
 use ibc_primitives::Signer;
 use serde::{Deserialize, Serialize};
@@ -36,23 +37,24 @@ pub enum IBCLifecycleComplete {
 /// derives the sender address to be used when calling wasm hooks
 /// https://github.com/osmosis-labs/osmosis/blob/master/x/ibc-hooks/keeper/keeper.go#L170
 /// ```rust
-/// let channel = ibc_rs_scale::core::ics24_host::identifier::ChannelId::new(0);
+/// use ibc_apps_more::types::hook;
+/// use ibc_core_host_types::identifiers::ChannelId;
+/// let channel = ChannelId::new(0);
 /// let original_sender =   "juno12smx2wdlyttvyzvzg54y2vnqwq2qjatezqwqxu";
-/// let hashed_sender = xc_core::transport::ibc::ics20::hook::derive_intermediate_sender(&channel, original_sender, "osmo").expect("new address");
+/// let hashed_sender = hook::derive_intermediate_sender(&channel, original_sender, "osmo").expect("new address");
 /// assert_eq!(hashed_sender, "osmo1nt0pudh879m6enw4j6z4mvyu3vmwawjv5gr7xw6lvhdsdpn3m0qs74xdjl");
 /// ```
 pub fn derive_intermediate_sender(
     channel: &ChannelId,
     original_sender: &str,
     bech32_prefix: &str,
-) -> Result<String, bech32::EncodeError> {
-    let sender_str = alloc::format!("{channel}/{original_sender}");
-    let sender_hash_32 = addess_hash(SENDER_PREFIX, sender_str.as_bytes());
-    let sender = sender_hash_32.to_base32();
-    
+) -> Result<String, crate::types::error::HookError> {
+    use data_encoding::BASE32;
+    let channel_sender = alloc::format!("{channel}/{original_sender}");
+    let sender_hash = addess_hash(SENDER_PREFIX, channel_sender.as_bytes());
     let mut buf = String::new();
-    let hrp = Hrp::parse(bech32_prefix).expect("valid hrp");
-    bech32::encode_lower_to_fmt(&mut buf, hrp, sender)?;
+    let hrp = Hrp::parse(bech32_prefix)?;
+    bech32::encode_lower_to_fmt::<Bech32, _>(&mut buf, hrp, sender_hash.as_ref())?;
     Ok(buf)
 }
 
