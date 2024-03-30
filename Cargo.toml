@@ -1,9 +1,10 @@
 [package]
 name = "ibc-apps-more"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
 
 [dependencies]
+# forks are because of parity primitives used by ibc rs used by wasm, so that need to kick release (patched by me before) of primitives, than ref in ibc rs then here then in wasm
 ibc-app-transfer-types = { git = "https://github.com/dzmitry-lahoda-forks/ibc-rs.git", branch = "dz/14", default-features = false, features = [
     "serde",
 ] }
@@ -17,16 +18,19 @@ serde-json-wasm = { version = "^1.0.1", default-features = false }
 sha2 = { version = "^0.10.8", default-features = false }
 bech32 = { version = "^0.11.0", default-features = false }
 serde = { version = "^1.0.197", default-features = false }
+# pinged 3 times or more, no response for merge :( 
 serde-cw-value = { git = "https://github.com/dzmitry-lahoda-forks/serde-cw-value.git", branch = "dz/3", default-features = false }
 schemars = { version = "^0.8.16", default-features = false, optional = true }
 cosmwasm-std = { version = "^1.5.3", default-features = false, optional = true }
 hex = { version = "^0.4.3", default-features = false }
 prost = { version = "^0.12.3", default-features = false }
-parity-scale-codec = { version = "^3.6.9", default-features = false, optional = true}
+parity-scale-codec = { version = "^3.6.9", default-features = false, optional = true }
 scale-info = { version = "^2.11.1", default-features = false, optional = true }
-data-encoding = { version = "^2.5.0", default-features = false, features = ["alloc"] }
+data-encoding = { version = "^2.5.0", default-features = false, features = [
+    "alloc",
+] }
 
-displaydoc = {version = "^0.2.4", default-features = false}
+displaydoc = { version = "^0.2.4", default-features = false }
 
 [features]
 json-schema = [

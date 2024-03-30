@@ -42,7 +42,7 @@ pub struct Coin {
 }
 
 impl Coin {
-    pub const PROTO_MESSAGE_URL: &str = "/cosmos.base.v1beta1.Coin";
+    pub const PROTO_MESSAGE_URL: &'static str = "/cosmos.base.v1beta1.Coin";
 }
 
 #[cfg(feature = "cosmwasm")]

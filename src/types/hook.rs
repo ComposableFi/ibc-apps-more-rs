@@ -1,7 +1,6 @@
 //! osmosis hooks app
 
 use bech32::{Bech32, Hrp};
-use data_encoding::BASE32;
 use ibc_core_host_types::identifiers::ChannelId;
 use ibc_primitives::Signer;
 use serde::{Deserialize, Serialize};
@@ -49,7 +48,6 @@ pub fn derive_intermediate_sender(
     original_sender: &str,
     bech32_prefix: &str,
 ) -> Result<String, crate::types::error::HookError> {
-    use data_encoding::BASE32;
     let channel_sender = alloc::format!("{channel}/{original_sender}");
     let sender_hash = addess_hash(SENDER_PREFIX, channel_sender.as_bytes());
     let mut buf = String::new();
@@ -82,8 +80,10 @@ impl<Msg> Callback<Msg> {
     pub fn new(contract: Signer, msg: Msg) -> Self {
         Self { contract, msg }
     }
+}
 
-    #[cfg(feature = "cosmwasm")]
+#[cfg(feature = "cosmwasm")]
+impl Callback<serde_cw_value::Value> {
     pub fn new_cosmwasm(contract: cosmwasm_std::Addr, msg: serde_cw_value::Value) -> Self {
         Self {
             contract: contract.to_string().into(),

@@ -1,6 +1,5 @@
 use displaydoc::Display;
 
-
 #[derive(Debug, Display)]
 pub enum HookError {
     /// Error encoding bech32: {0}
