@@ -26,11 +26,11 @@ hex = { version = "^0.4.3", default-features = false }
 prost = { version = "^0.12.3", default-features = false }
 parity-scale-codec = { version = "^3.6.9", default-features = false, optional = true }
 scale-info = { version = "^2.11.1", default-features = false, optional = true }
-data-encoding = { version = "^2.5.0", default-features = false, features = [
-    "alloc",
-] }
+# data-encoding = { version = "^2.5.0", default-features = false, features = [
+#     "alloc",
+# ] }
 
-displaydoc = { version = "^0.2.4", default-features = false }
+# displaydoc = { version = "^0.2.4", default-features = false }
 
 [features]
 json-schema = [
